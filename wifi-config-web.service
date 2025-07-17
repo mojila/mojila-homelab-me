@@ -1,0 +1,33 @@
+[Unit]
+Description=Wi-Fi Configuration Web Interface
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/wifi-config
+ExecStart=/usr/bin/python3 /opt/wifi-config/wifi_config_web.py
+Restart=always
+RestartSec=10
+KillMode=mixed
+TimeoutStopSec=5
+
+# Environment variables
+Environment=PYTHONUNBUFFERED=1
+Environment=FLASK_ENV=production
+
+# Security settings
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log /etc/wpa_supplicant /etc/dhcpcd.conf
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=wifi-config-web
+
+[Install]
+WantedBy=multi-user.target
