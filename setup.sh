@@ -28,10 +28,7 @@ nmcli connection add type wifi ifname wlan0 con-name hotspot autoconnect no ssid
     802-11-wireless.channel 7 \
     ipv4.method shared
 
-# Disable 802.1x authentication to prevent supplicant issues
-nmcli connection modify hotspot 802-1x.eap ""
-nmcli connection modify hotspot 802-1x.identity ""
-nmcli connection modify hotspot 802-1x.password ""
+# Hotspot connection created (AP mode doesn't use 802.1x authentication)
 
 echo "Hotspot configuration created successfully!"
 
