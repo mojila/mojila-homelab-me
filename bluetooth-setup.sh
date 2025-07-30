@@ -162,3 +162,4 @@ main() {
 
 # Run main function
 main "$@"
+bluetoothctl pairable yes
