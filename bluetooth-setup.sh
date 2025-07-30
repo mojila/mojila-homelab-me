@@ -45,8 +45,6 @@ configure_bluetooth() {
         sleep 2
         echo "system-alias MyHomelab"
         sleep 1
-        echo "pairable on"
-        sleep 1
         echo "discoverable on"
         sleep 1
         echo "discoverable-timeout 0"
@@ -54,6 +52,8 @@ configure_bluetooth() {
         echo "agent on"
         sleep 1
         echo "default-agent"
+        sleep 1
+        echo "pairable on"
         sleep 1
         echo "quit"
     } | bluetoothctl
