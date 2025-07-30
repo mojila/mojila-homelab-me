@@ -43,6 +43,8 @@ configure_bluetooth() {
     {
         echo "power on"
         sleep 2
+        echo "system-alias MyHomelab"
+        sleep 1
         echo "pairable on"
         sleep 1
         echo "discoverable on"
@@ -70,6 +72,13 @@ verify_configuration() {
         return 1
     fi
     
+    if echo "$status" | grep -q "Alias: MyHomelab"; then
+        echo "✓ Device name set to MyHomelab"
+    else
+        echo "✗ Device name not set correctly"
+        return 1
+    fi
+    
     if echo "$status" | grep -q "Discoverable: yes"; then
         echo "✓ Bluetooth is discoverable"
     else
@@ -93,6 +102,7 @@ main() {
     echo "=== Bluetooth Auto-Setup Script ==="
     echo "This script will configure Bluetooth to be:"
     echo "- Powered on"
+    echo "- Named 'MyHomelab'"
     echo "- Pairable"
     echo "- Discoverable"
     echo ""

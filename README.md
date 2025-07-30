@@ -37,6 +37,7 @@ If you prefer to install manually, follow the detailed guide in `bluetooth-setup
 
 After installation, your Orange Pi will automatically:
 - Power on Bluetooth at boot
+- Set the device name to "MyHomelab"
 - Make the device pairable
 - Make the device discoverable
 - Set up a default Bluetooth agent
@@ -51,6 +52,16 @@ chmod +x bluetooth-setup.sh
 
 # Run the setup
 ./bluetooth-setup.sh
+```
+
+## Quick Commands for Manual Setup:
+
+```bash
+# One-liner for immediate setup
+echo -e 'power on\nsystem-alias MyHomelab\npairable on\ndiscoverable on\nagent on\ndefault-agent\nexit' | bluetoothctl
+
+# Enable Bluetooth service at boot
+sudo systemctl enable bluetooth
 ```
 
 ## Verification

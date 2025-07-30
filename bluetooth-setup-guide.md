@@ -25,6 +25,7 @@ bluetoothctl
 
 # Within bluetoothctl:
 power on
+system-alias MyHomelab
 pairable on
 discoverable on
 agent on
@@ -36,7 +37,7 @@ exit
 
 ```bash
 # Execute all commands in sequence
-echo -e 'power on\npairable on\ndiscoverable on\nagent on\ndefault-agent\nexit' | bluetoothctl
+echo -e 'power on\nsystem-alias MyHomelab\npairable on\ndiscoverable on\nagent on\ndefault-agent\nexit' | bluetoothctl
 ```
 
 ## Making Settings Persistent
