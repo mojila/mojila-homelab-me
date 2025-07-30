@@ -47,7 +47,11 @@ configure_bluetooth() {
         sleep 1
         echo "pairable on"
         sleep 1
+        echo "pairable-timeout 0"
+        sleep 1
         echo "discoverable on"
+        sleep 1
+        echo "discoverable-timeout 0"
         sleep 1
         echo "agent on"
         sleep 1
@@ -118,8 +122,8 @@ main() {
     echo "This script will configure Bluetooth to be:"
     echo "- Powered on"
     echo "- Named 'MyHomelab'"
-    echo "- Pairable"
-    echo "- Discoverable"
+    echo "- Always pairable (no timeout)"
+    echo "- Always discoverable (no timeout)"
     echo ""
     
     # Check if running as root for service operations

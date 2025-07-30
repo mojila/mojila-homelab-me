@@ -27,7 +27,9 @@ bluetoothctl
 power on
 system-alias MyHomelab
 pairable on
+pairable-timeout 0
 discoverable on
+discoverable-timeout 0
 agent on
 default-agent
 exit
@@ -37,7 +39,7 @@ exit
 
 ```bash
 # Execute all commands in sequence
-echo -e 'power on\nsystem-alias MyHomelab\npairable on\ndiscoverable on\nagent on\ndefault-agent\nexit' | bluetoothctl
+echo -e 'power on\nsystem-alias MyHomelab\npairable on\npairable-timeout 0\ndiscoverable on\ndiscoverable-timeout 0\nagent on\ndefault-agent\nexit' | bluetoothctl
 ```
 
 ## Making Settings Persistent
@@ -54,14 +56,17 @@ Add or modify these settings:
 
 ```ini
 [General]
-# Enable discoverability by default
+# Enable discoverability by default (0 = always discoverable)
 DiscoverableTimeout = 0
 
-# Enable pairing by default
+# Enable pairing by default (0 = always pairable)
 PairableTimeout = 0
 
 # Auto-enable controller
 AutoEnable = true
+
+# Keep device always pairable
+AlwaysPairable = true
 
 [Policy]
 # Auto-enable profiles
