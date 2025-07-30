@@ -1,0 +1,33 @@
+[Unit]
+Description=Bluetooth Auto Setup Service
+Documentation=man:bluetoothctl(1)
+After=bluetooth.service
+Wants=bluetooth.service
+Requires=bluetooth.service
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/bluetooth-setup.sh
+RemainAfterExit=yes
+User=root
+Group=root
+
+# Restart policy
+Restart=on-failure
+RestartSec=10
+
+# Timeout settings
+TimeoutStartSec=60
+TimeoutStopSec=10
+
+# Environment
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=bluetooth-auto-setup
+
+[Install]
+WantedBy=multi-user.target
