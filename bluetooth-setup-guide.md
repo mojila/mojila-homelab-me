@@ -209,7 +209,16 @@ bluetoothctl scan on
    # Logout and login again
    ```
 
-4. **Reset Bluetooth completely:**
+4. **Script verification fails despite correct status:**
+   ```bash
+   # Run script with debug mode to see full bluetoothctl output
+   DEBUG=1 ./bluetooth-setup.sh
+   
+   # Or check bluetoothctl output manually
+   bluetoothctl show
+   ```
+
+5. **Reset Bluetooth completely:**
    ```bash
    sudo systemctl stop bluetooth
    sudo rm -rf /var/lib/bluetooth/*

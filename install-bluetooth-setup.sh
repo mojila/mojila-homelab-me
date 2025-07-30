@@ -14,9 +14,10 @@ SERVICE_PATH="/etc/systemd/system"
 
 echo "=== Bluetooth Auto-Setup Installer ==="
 echo "This script will:"
-echo "1. Install the Bluetooth setup script"
-echo "2. Create and enable a systemd service"
+echo "1. Install/update the Bluetooth setup script"
+echo "2. Create/update and enable a systemd service"
 echo "3. Configure Bluetooth for auto-discovery at boot"
+echo "4. Handle existing installations gracefully (repeatable)"
 echo ""
 
 # Check if running as root
@@ -133,10 +134,11 @@ test_setup() {
 # Function to show status and next steps
 show_completion() {
     echo ""
-    echo "🎉 Installation completed successfully!"
+    echo "🎉 Installation/Update completed successfully!"
     echo ""
     echo "Your Orange Pi will now automatically configure Bluetooth at boot to be:"
     echo "- Powered on"
+    echo "- Named 'MyHomelab'"
     echo "- Pairable"
     echo "- Discoverable"
     echo ""
@@ -146,9 +148,10 @@ show_completion() {
     echo "- Restart service: sudo systemctl restart $SERVICE_NAME"
     echo "- Disable service: sudo systemctl disable $SERVICE_NAME"
     echo "- Manual setup: sudo $INSTALL_PATH/$SCRIPT_NAME"
+    echo "- Update installation: sudo $0 --update"
     echo ""
     echo "Bluetooth status:"
-    bluetoothctl show 2>/dev/null | grep -E "(Powered|Discoverable|Pairable)" || echo "Run 'bluetoothctl show' to check status"
+    bluetoothctl show 2>/dev/null | grep -E "(Powered|Discoverable|Pairable|Alias)" || echo "Run 'bluetoothctl show' to check status"
 }
 
 # Function to uninstall (if requested)
@@ -180,10 +183,17 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo ""
     echo "Options:"
     echo "  --help, -h        Show this help message"
+    echo "  --update          Update existing installation (same as running without flags)"
     echo "  --uninstall, -u   Uninstall the Bluetooth auto-setup"
     echo ""
-    echo "This script installs automatic Bluetooth configuration for Orange Pi."
+    echo "This script installs/updates automatic Bluetooth configuration for Orange Pi."
+    echo "The script is repeatable - running it multiple times will update the configuration."
     exit 0
+fi
+
+# Handle --update flag (same as default behavior)
+if [ "$1" = "--update" ]; then
+    echo "Update mode: Will update existing installation if present"
 fi
 
 # Main installation process

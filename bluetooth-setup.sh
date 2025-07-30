@@ -65,31 +65,46 @@ verify_configuration() {
     
     local status=$(bluetoothctl show 2>/dev/null)
     
-    if echo "$status" | grep -q "Powered: yes"; then
+    # Debug: Show full status if DEBUG environment variable is set
+    if [ "$DEBUG" = "1" ]; then
+        echo "Debug: Full bluetoothctl show output:"
+        echo "$status"
+        echo "---"
+    fi
+    
+    if echo "$status" | grep -qi "powered.*yes"; then
         echo "✓ Bluetooth is powered on"
     else
         echo "✗ Bluetooth is not powered on"
+        echo "Debug: Powered status in output:"
+        echo "$status" | grep -i powered || echo "No powered status found"
         return 1
     fi
     
-    if echo "$status" | grep -q "Alias: MyHomelab"; then
+    if echo "$status" | grep -qi "alias.*MyHomelab"; then
         echo "✓ Device name set to MyHomelab"
     else
         echo "✗ Device name not set correctly"
+        echo "Debug: Alias status in output:"
+        echo "$status" | grep -i alias || echo "No alias found"
         return 1
     fi
     
-    if echo "$status" | grep -q "Discoverable: yes"; then
+    if echo "$status" | grep -qi "discoverable.*yes"; then
         echo "✓ Bluetooth is discoverable"
     else
         echo "✗ Bluetooth is not discoverable"
+        echo "Debug: Discoverable status in output:"
+        echo "$status" | grep -i discoverable || echo "No discoverable status found"
         return 1
     fi
     
-    if echo "$status" | grep -q "Pairable: yes"; then
+    if echo "$status" | grep -qi "pairable.*yes"; then
         echo "✓ Bluetooth is pairable"
     else
         echo "✗ Bluetooth is not pairable"
+        echo "Debug: Pairable status in output:"
+        echo "$status" | grep -i pairable || echo "No pairable status found"
         return 1
     fi
     

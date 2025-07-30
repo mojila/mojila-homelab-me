@@ -21,6 +21,8 @@ This repository contains scripts and configuration files to automatically enable
    sudo reboot
    ```
 
+**Note**: The installer is repeatable - you can run it multiple times to update the configuration. Use `sudo ./install-bluetooth-setup.sh --update` to explicitly update an existing installation.
+
 ### Manual Installation
 
 If you prefer to install manually, follow the detailed guide in `bluetooth-setup-guide.md`.
@@ -106,6 +108,16 @@ sudo systemctl restart bluetooth
 
 # Check Bluetooth service logs
 sudo journalctl -u bluetooth -f
+```
+
+### Script Verification Issues
+
+```bash
+# Run script with debug mode to see detailed output
+DEBUG=1 ./bluetooth-setup.sh
+
+# Check bluetoothctl output format manually
+bluetoothctl show
 ```
 
 ### Reset Bluetooth Configuration
