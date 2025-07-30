@@ -9,9 +9,15 @@ echo "Setting up WiFi hotspot..."
 echo "Configuring WiFi interface..."
 nmcli radio wifi on
 
-# Stop any existing hotspot
+# Stop any existing hotspot and clean up old connections
 echo "Stopping any existing hotspot..."
 nmcli device disconnect wlan0 2>/dev/null || true
+
+# Delete any existing hotspot connections (including old 'Hotspot' with capital H)
+echo "Cleaning up old hotspot connections..."
+nmcli connection delete "Hotspot" 2>/dev/null || true
+nmcli connection delete "hotspot" 2>/dev/null || true
+nmcli connection delete "Homelab" 2>/dev/null || true
 
 # Create hotspot using simplified command
 echo "Creating WiFi hotspot..."
