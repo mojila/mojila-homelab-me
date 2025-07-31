@@ -1,32 +1,23 @@
-import bluetooth
-import argparse
+import asyncio
+from bleak import BleakClient, BleakScanner
 
-def find_pi():
-    print("[🔍] Searching for Bluetooth devices...")
-    devices = bluetooth.discover_devices(duration=5, lookup_names=True)
-    for addr, name in devices:
-        print(f"  Found {name} - {addr}")
-        if "OrangePi" in name or "raspberrypi" in name:
-            return addr
-    raise Exception("Orange Pi not found")
+COMMAND_UUID = "12345678-1234-5678-1234-56789abcdef1"
 
-def send_command(addr, command):
-    port = 1  # Common RFCOMM port
-    sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-    sock.connect((addr, port))
-    print(f"[📡] Connected to {addr}")
-    sock.send(command)
-    response = sock.recv(4096).decode()
-    print("[📬] Response:\n" + response)
-    sock.close()
+async def send_command(command):
+    print("[🔍] Scanning for Orange Pi BLE...")
+    devices = await BleakScanner.discover()
+    for d in devices:
+        if "OrangePi" in d.name:
+            async with BleakClient(d.address) as client:
+                print(f"[🔗] Connected to {d.name}")
+                await client.write_gatt_char(COMMAND_UUID, command.encode())
+                print("[✅] Command sent")
+                return
+    print("[❌] Orange Pi not found.")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("command", help="Shell command to send to Orange Pi")
-    args = parser.parse_args()
-
-    try:
-        pi_address = find_pi()
-        send_command(pi_address, args.command)
-    except Exception as e:
-        print("[❌] Error:", e)
+    import sys
+    if len(sys.argv) < 2:
+        print("Usage: python ble_client.py <command>")
+        exit(1)
+    asyncio.run(send_command(sys.argv[1]))

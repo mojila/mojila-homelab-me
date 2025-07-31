@@ -1,33 +1,30 @@
-import bluetooth
+from dbus_next.aio import MessageBus
+from dbus_next.service import ServiceInterface, method, dbus_property, signal
+import subprocess
+import asyncio
 
-server_sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-server_sock.bind(("", bluetooth.PORT_ANY))
-server_sock.listen(1)
+COMMAND_UUID = "12345678-1234-5678-1234-56789abcdef1"
 
-port = server_sock.getsockname()[1]
-bluetooth.advertise_service(server_sock, "PiCommandServer",
-                            service_classes=[bluetooth.SERIAL_PORT_CLASS],
-                            profiles=[bluetooth.SERIAL_PORT_PROFILE])
+class CommandService(ServiceInterface):
+    def __init__(self):
+        super().__init__("org.bluez.GattCharacteristic1")
 
-print(f"[🔵] Waiting for connection on RFCOMM channel {port}...")
+    @method()
+    async def WriteValue(self, value, options):
+        command = bytes(value).decode()
+        print(f"[📥] Received command: {command}")
+        try:
+            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+            print("[🖥] Output:", result.stdout or result.stderr)
+        except Exception as e:
+            print(f"[⚠️] Error: {e}")
 
-client_sock, client_info = server_sock.accept()
-print(f"[✅] Accepted connection from {client_info}")
+async def main():
+    bus = await MessageBus().connect()
+    # You'd need to register service and characteristic properly here
+    # We can use `aiobleserver` or BlueZ profile example if needed
 
-try:
-    while True:
-        data = client_sock.recv(1024).decode().strip()
-        if not data:
-            break
-        print(f"[📥] Received: {data}")
-        # Execute command
-        import subprocess
-        result = subprocess.run(data, shell=True, capture_output=True, text=True)
-        response = result.stdout + result.stderr
-        client_sock.send(response.encode())
-except OSError:
-    pass
+    print("[🔵] BLE GATT server started (mock-up)")
+    await asyncio.Future()
 
-print("[🛑] Disconnected.")
-client_sock.close()
-server_sock.close()
+asyncio.run(main())
