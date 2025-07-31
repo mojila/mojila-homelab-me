@@ -7,7 +7,7 @@ async def send_command(command):
     print("[🔍] Scanning for Orange Pi BLE...")
     devices = await BleakScanner.discover()
     for d in devices:
-        if "OrangePi" in d.name:
+        if "orangepizero2w" in d.name:
             async with BleakClient(d.address) as client:
                 print(f"[🔗] Connected to {d.name}")
                 await client.write_gatt_char(COMMAND_UUID, command.encode())
